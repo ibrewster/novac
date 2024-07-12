@@ -63,6 +63,7 @@ def transfer_files(conf_file):
                 # Download the file
                 scp.get(file_path, local_path="temp.transfer")
                 
+                logging.info("Renaming temp.transfer to %s", file)
                 # Rename the file to the final name after downloading is complete
                 os.rename('temp.transfer', file)
                 
@@ -86,7 +87,10 @@ if __name__ == "__main__":
     logging.debug("Processing config files in: %s", str(all_configs))
     for conf_file in all_configs:
         conf_file = str(Path(conf_file).with_suffix('').name)
-        transfer_files(conf_file)
+        try:
+            transfer_files(conf_file)
+        except Exception as e:
+            logging.exception("Unable to transfer files for %s", conf_file)
         
     logging.info("Transfer process complete")
 
