@@ -61,7 +61,10 @@ def transfer_files(conf_file):
                 logging.info("Transfering file %s", file)
                 
                 # Download the file
-                scp.get(file_path)
+                scp.get(file_path, local_path="temp.transfer")
+                
+                # Rename the file to the final name after downloading is complete
+                os.rename('temp.transfer', file)
                 
                 # And remove it from the remote server
                 logging.info("Removing %s from remote server", file)
